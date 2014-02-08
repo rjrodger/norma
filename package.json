@@ -21,5 +21,8 @@
   "homepage": "https://github.com/rjrodger/norma",
   "devDependencies": {
     "pegjs": "~0.8.0"
+  },
+  "dependencies": {
+    "underscore": "~1.5.2"
   }
 }

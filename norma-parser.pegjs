@@ -28,15 +28,25 @@ type
   = t:(typeatom ('|' typeatom)*) { return {mark:t[0],or:t[1]} }
 
 typeatom
-  = string   { return 's' }
-  / integer  { return 'i' }
-  / boolean  { return 'b' }
-  / function { return 'f' }
-  / array    { return 'a' }
-  / object   { return 'o' }
+  = string    { return 's' }
+  / integer   { return 'i' }
+  / number    { return 'n' }
+  / boolean   { return 'b' }
+  / function  { return 'f' }
+  / array     { return 'a' }
+  / regexp    { return 'r' }
+  / date      { return 'd' }
+  / object    { return 'o' }
+  / badtype   
 
 string
   = 's'
+
+integer
+  = 'i'
+
+number
+  = 'n'
 
 boolean
   = 'b'
@@ -47,23 +57,19 @@ function
 array
   = 'a'
 
-object
-  = 'o'
-
-
-
-integer
-  = 'i'
-
-number
-  = 'n'
-
 regexp
   = 'r'
 
-date
-  = 't'
+object
+  = 'o'
 
+date
+  = 'd'
+
+badtype
+  = t:[^}] { error('not a type character: "'+t+'"') }
+
+/*
 arguments
   = 'r'
 
@@ -80,6 +86,4 @@ undefined
 nan
   = 'A'
 
-
-
-
+*/

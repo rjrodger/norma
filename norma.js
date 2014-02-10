@@ -8,8 +8,13 @@ var parser = require('./norma-parser')
 function norma( spec, rawargs ) {
   var args = Array.prototype.slice.call(rawargs||[])
 
-  var respec = parser.parse( spec )
-  
+  try {
+    var respec = parser.parse( spec )
+  }
+  catch(e) {
+    throw new Error('norma: '+e.message+'; spec:"'+spec+'", col:'+e.column+', line:'+e.line)
+  }
+
   var reindex = []
   var index   = 1
   var restr = ['^']
@@ -47,6 +52,7 @@ function norma( spec, rawargs ) {
 
   var re = new RegExp(restr.join(''))
   var argdesc = describe( args )
+  //console.log('ad='+argdesc)
 
   var outslots = re.exec(argdesc)
   if( !outslots ) return null;
@@ -78,8 +84,11 @@ function describe(args) {
     if( _.isString(arg) ) {
       desc.push('s')
     }
-    else if( _.isNumber(arg) ) {
+    else if( (!isNaN(arg) && ((arg | 0) === parseFloat(arg))) ) {
       desc.push('i')
+    }
+    else if( _.isNumber(arg) ) {
+      desc.push('n')
     }
     else if( _.isBoolean(arg) ) {
       desc.push('b')
@@ -89,6 +98,12 @@ function describe(args) {
     }
     else if( _.isArray(arg) ) {
       desc.push('a')
+    }
+    else if( _.isRegExp(arg) ) {
+      desc.push('r')
+    }
+    else if( _.isDate(arg) ) {
+      desc.push('d')
     }
     else if( _.isObject(arg) ) {
       desc.push('o')
@@ -105,25 +120,3 @@ function describe(args) {
 
 module.exports = norma
 
-
-
-
-console.dir( norma( 'si', ["a",1] ))
-console.dir( norma( 'si?', ["a"] ))
-console.dir( norma( 's?i', [1] ))
-console.dir( norma( 's i', ["a",1] ))
-console.dir( norma( 's i?', ["a"] ))
-console.dir( norma( 's? i', [1] ))
-console.dir( norma( 'foo:s bar:i', ["b",2] ))
-console.dir( norma( '{foo:s bar:i}', ["b",2] ))
-console.dir( norma( 's|i b', ["c",true] ))
-console.dir( norma( 's|i b', [3,false] ))
-console.dir( norma( 's|i|b', ['d'] ))
-console.dir( norma( 's|i|b', [4] ))
-console.dir( norma( 's|i|b', [true] ))
-console.dir( norma( 's,i', ["a",1] ))
-console.dir( norma( 's, i', ["a",1] ))
-console.dir( norma( 's ,i', ["a",1] ))
-console.dir( norma( 's , i', ["a",1] ))
-console.dir( norma( ' s , i', ["a",1] ))
-console.dir( norma( ' s , i ', ["a",1] ))

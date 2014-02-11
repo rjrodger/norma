@@ -36,6 +36,7 @@ typeatom
   / array     { return 'a' }
   / regexp    { return 'r' }
   / date      { return 'd' }
+  / arguments { return 'g' }
   / object    { return 'o' }
   / badtype   
 
@@ -60,19 +61,21 @@ array
 regexp
   = 'r'
 
-object
-  = 'o'
-
 date
   = 'd'
+
+arguments
+  = 'g'
+
+object
+  = 'o'
 
 badtype
   = t:[^}] { error('not a type character: "'+t+'"') }
 
-/*
-arguments
-  = 'r'
 
+
+/*
 error
   = 'e'
 

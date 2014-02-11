@@ -105,6 +105,9 @@ function describe(args) {
     else if( _.isDate(arg) ) {
       desc.push('d')
     }
+    else if( _.isArguments(arg) ) {
+      desc.push('g')
+    }
     else if( _.isObject(arg) ) {
       desc.push('o')
     }

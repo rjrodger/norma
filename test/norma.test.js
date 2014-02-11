@@ -7,6 +7,7 @@
 var util   = require('util')
 var assert = require('assert')
 
+var _     = require('underscore')
 var norma = require('..')
 
 
@@ -59,5 +60,11 @@ describe('norma', function(){
     assert.equal( "[ 1, /a/ ]", util.inspect( norma( 'ir', [1,/a/] )))
     assert.equal( "[ Mon Feb 10 2014 23:29:53 GMT+0000 (GMT) ]", util.inspect( norma( 'd', [new Date("2014-02-10T23:29:53.281Z")] )))
     assert.equal( "[ Mon Feb 10 2014 23:29:53 GMT+0000 (GMT), 9.9 ]", util.inspect( norma( 'dn', [new Date("2014-02-10T23:29:53.281Z"),9.9] )))
+
+    function test_args(){
+      assert.equal( "[ { '0': 999 } ]", util.inspect( norma( 'g', [arguments] )))
+    }
+    test_args(999)
+
   })
 })

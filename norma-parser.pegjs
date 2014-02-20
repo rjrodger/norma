@@ -23,13 +23,17 @@ name
 
 mod
   = '?' {return '?' }
+  / '*' {return '*' }
 
 type
   = t:(typeatom ('|' typeatom)*) { return {mark:t[0],or:t[1]} }
 
 typeatom
-  = string    { return 's' }
+  = any       { return '.' }
+  / string    { return 's' }
   / integer   { return 'i' }
+  / nan       { return 'A' }
+  / infinity  { return 'Y' }
   / number    { return 'n' }
   / boolean   { return 'b' }
   / function  { return 'f' }
@@ -37,14 +41,26 @@ typeatom
   / regexp    { return 'r' }
   / date      { return 'd' }
   / arguments { return 'g' }
+  / error     { return 'e' }
+  / null      { return 'N' }
+  / undefined { return 'U' }
   / object    { return 'o' }
   / badtype   
+
+any
+  = '.'
 
 string
   = 's'
 
 integer
   = 'i'
+
+nan
+  = 'A'
+
+infinity
+  = 'Y'
 
 number
   = 'n'
@@ -67,18 +83,8 @@ date
 arguments
   = 'g'
 
-object
-  = 'o'
-
-badtype
-  = t:[^}] { error('not a type character: "'+t+'"') }
-
-
-
-/*
 error
   = 'e'
-
 
 null
   = 'N'
@@ -86,7 +92,8 @@ null
 undefined
   = 'U'
 
-nan
-  = 'A'
+object
+  = 'o'
 
-*/
+badtype
+  = t:[^}] { error('not a type character: "'+t+'"') }

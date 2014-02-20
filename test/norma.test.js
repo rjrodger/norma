@@ -17,10 +17,10 @@ describe('norma', function(){
   it('happy', function(){
     assert.equal( "[ 'a', 1 ]", util.inspect( norma( 'si', ["a",1] )))
     assert.equal( "[ 'a', undefined ]", util.inspect( norma( 'si?', ["a"] )))
-    assert.equal( "[ 1, undefined ]", util.inspect( norma( 's?i', [1] )))
+    assert.equal( "[ undefined, 1 ]", util.inspect( norma( 's?i', [1] )))
     assert.equal( "[ 'a', 1 ]", util.inspect( norma( 's i', ["a",1] )))
     assert.equal( "[ 'a', undefined ]", util.inspect( norma( 's i?', ["a"] )))
-    assert.equal( "[ 1, undefined ]", util.inspect( norma( 's? i', [1] )))
+    assert.equal( "[ undefined, 1 ]", util.inspect( norma( 's? i', [1] )))
     assert.equal( "[ 1.1 ]", util.inspect( norma( 'n', [1.1] )))
     assert.equal( "[ 'b', 2, foo: 'b', bar: 2 ]", util.inspect( norma( 'foo:s bar:i', ["b",2] )))
     assert.equal( "{ foo: 'b', bar: 2 }", util.inspect( norma( '{foo:s bar:i}', ["b",2] )))
@@ -28,7 +28,13 @@ describe('norma', function(){
 
 
   it('no-match', function(){
-    assert.equal( "null", util.inspect( norma( 'i', [1.1] )))
+    try {
+      util.inspect( norma( 'i', [1.1] ))
+      assert.fail();
+    }
+    catch(e){ assert.ok(e.message.indexOf('invalid')) }
+
+    assert.equal( "null", util.inspect( norma( 'i', {onfail:'null'}, [1.1] )))
   })
 
 
@@ -55,6 +61,7 @@ describe('norma', function(){
     assert.equal( "[ 'a', 1 ]", util.inspect( norma( ' s , i ', ["a",1] )))
   })
 
+
   it('misc-objects', function(){
     assert.equal( "[ /a/ ]", util.inspect( norma( 'r', [/a/] )))
     assert.equal( "[ 1, /a/ ]", util.inspect( norma( 'ir', [1,/a/] )))
@@ -66,5 +73,38 @@ describe('norma', function(){
     }
     test_args(999)
 
+    assert.equal( "[ null ]", util.inspect( norma( 'N', [null] )))
+    assert.equal( "[ undefined ]", util.inspect( norma( 'U', [void 0] )))
+
+    assert.equal( "[ NaN ]", util.inspect( norma( 'A', [NaN] )))
+    assert.equal( "[ Infinity ]", util.inspect( norma( 'Y', [Infinity] )))
+
+
+    assert.equal( "[ [Error: a] ]", util.inspect( norma( 'e', [new Error('a')] )))
+    assert.equal( "[ [TypeError: b] ]", util.inspect( norma( 'e', [new TypeError('b')] )))
+
   })
+
+
+  it('curry', function(){
+    var n1 = norma('s')
+    assert.equal( "[ 'foo' ]", util.inspect( n1( ['foo'] )))
+    assert.equal( "[ 'bar' ]", util.inspect( n1( ['bar'] )))
+  })
+
+
+  it('dot', function(){
+    assert.equal( "[ 'foo' ]", util.inspect( norma( '.', ['foo'] )))
+    assert.equal( "[ 1 ]", util.inspect( norma( '.', [1] )))
+    assert.equal( "[ true, 1, 'a' ]", util.inspect( norma( 'b.s', [true,1,'a'] )))
+  })
+
+
+  it('star', function(){
+    assert.equal( "[ 'a' ]", util.inspect( norma( 's*', ['a'] )))
+    assert.equal( "[ 'a', 'a' ]", util.inspect( norma( 's*', ['a','a'] )))
+    assert.equal( "[ 'a', 1, 2, 3 ]", util.inspect( norma( 'si*', ['a',1,2,3] )))
+    assert.equal( "[ 'a', 1, 2, 3, true ]", util.inspect( norma( 's.*b', ['a',1,2,3,true] )))
+  })
+
 })

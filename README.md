@@ -15,7 +15,9 @@ myAPI.doStuff( 'the-stuff', function( err, result ){ ... } )
 But you also want to support options:
 
 ```JavaScript
-myAPI.doStuff( 'the-stuff', { option1:'foo', option2:'bar'}, function( err, result ){ ... } )
+myAPI.doStuff( 'the-stuff', 
+               { option1:'foo', option2:'bar'}, 
+               function( err, result ){ ... } )
 ```
 
 The callback should be the last argument. That's the style. So you have to write a bit of logic to test if the second argument
@@ -148,10 +150,10 @@ Now you can do this:
    * "so?f" => [ string, optional object, function ] => [ "a", function(){...} ]; [ "a", {b:1}, function(){...} ]
    * "s?n"  => [ optional string, number ] => [ "a", 1 ]; [ 1 ]
    * "si*"  => [ string, integers... ] => [ "a", 1 ]; [ a, 1, 2 ]; [ a, 1, 2, 3 ]
-   * "s.*"  => [ string, anthing... ] => [ "a", true ]; [ a, {}, [] ]; [ a, 3, {}, true, /hola/ ]
+   * "s.*"  => [ string, anything... ] => [ "a", true ]; [ a, {}, [] ]; [ a, 3, {}, true, /hola/ ]
    * "s|if" => [ string or integer, function ] => [ "a", function(){...} ]; [ 1, function(){...} ];
 
-You can use whitespace to maek things more readable:
+You can use whitespace to make things more readable:
 
   * "so?f" === "s o? f" 
 

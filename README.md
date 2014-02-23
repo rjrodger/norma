@@ -69,7 +69,7 @@ And of course, if your function is called with arguments that do not match the e
 
 If you're using this module, feel free to contact me on twitter if you have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
-Current Version: 0.1.0
+Current Version: 0.1.1
 
 Tested on: node 0.10.24
 
@@ -159,12 +159,15 @@ You can use whitespace to make things more readable:
 
 You can also give arguments names. These are set as properties on the returned array, as well being assigned an index:
 
-  * "foo:s" => [ "s", foo:"s" ]  // in util.inspect output format
+  * "foo:s" => [ "val", foo:"val" ]  // in util.inspect output format
 
 If really you want an object, use the form:
 
-  * "{foo:s}" => { foo:"s" }
+  * "{foo:s}" => { foo:"val" }
 
+If you use the * modifier, and a name, then you'll get back an array listing all the matches (zero or more).
+
+  * "{foo:s*}" => { foo: ["v1","v2",...] }
 
 And that's it!
 

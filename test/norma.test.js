@@ -105,6 +105,9 @@ describe('norma', function(){
     assert.equal( "[ 'a', 'a' ]", util.inspect( norma( 's*', ['a','a'] )))
     assert.equal( "[ 'a', 1, 2, 3 ]", util.inspect( norma( 'si*', ['a',1,2,3] )))
     assert.equal( "[ 'a', 1, 2, 3, true ]", util.inspect( norma( 's.*b', ['a',1,2,3,true] )))
+
+    assert.equal( "[ 'a', 1, 2, 3, foo: [ 1, 2, 3 ] ]", util.inspect( norma( 's foo:i*', ['a',1,2,3] )))
+    assert.equal( "{ bar: 'a', foo: [ 1, 2, 3 ] }", util.inspect( norma( '{bar:s foo:i*}', ['a',1,2,3] )))
   })
 
 })

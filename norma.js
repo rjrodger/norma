@@ -111,6 +111,9 @@ function norma( spec, options, rawargs ) {
         var m = outslots[indexspec.index]
         var found = '' != m
         if( found ) {
+          var iname = specdef.respec[i].name
+          var istar = '*' === specdef.respec[i].mod
+
           if( 1 == m.length ) {
             val = args[j]
             j++
@@ -119,14 +122,18 @@ function norma( spec, options, rawargs ) {
               out[k] = val
             }
 
-            if( null != specdef.respec[i].name ) {
-              out[specdef.respec[i].name] = val
+            if( null != iname ) {
+              if( istar ) {
+                (out[iname] = (out[iname] || [])).push(val)
+              }
+              else {
+                out[specdef.respec[i].name] = val
+              }
             }
 
             k++
           }
           else if( 1 < m.length ) {
-            var iname = specdef.respec[i].name
             for( var mI = 0; mI < m.length; mI++ ) {
               val = args[j]
               j++
@@ -144,7 +151,9 @@ function norma( spec, options, rawargs ) {
           }
         }
         else {
-          out[k] = void 0
+          if( !specdef.respec.object ) {
+            out[k] = void 0
+          }
           k++
         }
       }

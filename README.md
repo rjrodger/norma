@@ -195,3 +195,7 @@ npm test
 
 
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/rjrodger/norma/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+

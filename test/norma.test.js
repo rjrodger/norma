@@ -39,7 +39,7 @@ describe('norma', function(){
 
 
   it('bad-parse', function(){
-    try { norma( 'q' ) } catch(e) { assert.equal('norma: not a type character: "q"; spec:"q", col:1, line:1',e.message) }
+    try { norma.compile( 'q' ) } catch(e) { assert.equal('norma: not a type character: "q"; spec:"q", col:1, line:1',e.message) }
   })
 
 
@@ -86,8 +86,8 @@ describe('norma', function(){
   })
 
 
-  it('curry', function(){
-    var n1 = norma('s')
+  it('compile', function(){
+    var n1 = norma.compile('s')
     assert.equal( "[ 'foo' ]", util.inspect( n1( ['foo'] )))
     assert.equal( "[ 'bar' ]", util.inspect( n1( ['bar'] )))
   })
@@ -108,6 +108,17 @@ describe('norma', function(){
 
     assert.equal( "[ 'a', 1, 2, 3, foo: [ 1, 2, 3 ] ]", util.inspect( norma( 's foo:i*', ['a',1,2,3] )))
     assert.equal( "{ bar: 'a', foo: [ 1, 2, 3 ] }", util.inspect( norma( '{bar:s foo:i*}', ['a',1,2,3] )))
+  })
+
+
+  it('no-args', function(){
+
+    try { norma('s'); assert.fail(); }
+    catch(e) { assert.ok(~e.message.indexOf('no arguments variable')) }
+
+    try { var compiled = norma.compile('s'); compiled(); assert.fail(); }
+    catch(e) { assert.ok(~e.message.indexOf('no arguments variable')) }
+
   })
 
 })

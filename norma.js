@@ -16,14 +16,7 @@ var defopts = {
 var specmap = {}
 
 
-function norma( spec, options, rawargs ) {
-  if( _.isArguments(options) || _.isArray(options ) ) {
-    rawargs = options
-    options = null
-  }
-  options = null == options ? defopts : _.extend({},defopts,options)
-
-
+function compile( spec ) {
   var specdef = specmap[spec]
 
   if( null == specdef ) {
@@ -77,44 +70,60 @@ function norma( spec, options, rawargs ) {
     specdef = specmap[spec] = {re:re,respec:respec,reindex:reindex}
   }
 
-  
-  if( null == rawargs ) {
-    return function(rawargs){
-      return processargs(rawargs)
+  return specdef
+}
+
+
+function processargs( specdef, options, rawargs ) {
+  var args = Array.prototype.slice.call(rawargs||[])
+  var argdesc = describe( args )
+
+  var outslots = specdef.re.exec(argdesc)
+  if( !outslots ) {
+    if( 'throw' == options.onfail ) {
+      throw new Error('norma: invalid arguments; expected: "'+spec+'", was: "'+argdesc+'"; values:'+args)
     }
+    else return null;
   }
-  else return processargs(rawargs)
 
-  function processargs( rawargs ) {
-    var args = Array.prototype.slice.call(rawargs||[])
-    var argdesc = describe( args )
+  var out = specdef.respec.object ? {} : []
+  var offset = 0
+  for(var i = 0, j = 0, k = 0; i < specdef.reindex.length; i++ ) {
+    var indexspec = specdef.reindex[i]
+    var val = void 0
 
-    var outslots = specdef.re.exec(argdesc)
-    if( !outslots ) {
-      if( 'throw' == options.onfail ) {
-        throw new Error('norma: invalid arguments; expected: "'+spec+'", was: "'+argdesc+'"; values:'+args)
-      }
-      else return null;
+    if( !specdef.respec.object ) {
+      out[k] = val
     }
+    
+    if( null != indexspec.index) {
+      var m = outslots[indexspec.index]
+      var found = '' != m
+      if( found ) {
+        var iname = specdef.respec[i].name
+        var istar = '*' === specdef.respec[i].mod
 
-    var out = specdef.respec.object ? {} : []
-    var offset = 0
-    for(var i = 0, j = 0, k = 0; i < specdef.reindex.length; i++ ) {
-      var indexspec = specdef.reindex[i]
-      var val = void 0
+        if( 1 == m.length ) {
+          val = args[j]
+          j++
 
-      if( !specdef.respec.object ) {
-        out[k] = val
-      }
-      
-      if( null != indexspec.index) {
-        var m = outslots[indexspec.index]
-        var found = '' != m
-        if( found ) {
-          var iname = specdef.respec[i].name
-          var istar = '*' === specdef.respec[i].mod
+          if( !specdef.respec.object ) {
+            out[k] = val
+          }
 
-          if( 1 == m.length ) {
+          if( null != iname ) {
+            if( istar ) {
+              (out[iname] = (out[iname] || [])).push(val)
+            }
+            else {
+              out[specdef.respec[i].name] = val
+            }
+          }
+
+          k++
+        }
+        else if( 1 < m.length ) {
+          for( var mI = 0; mI < m.length; mI++ ) {
             val = args[j]
             j++
 
@@ -123,44 +132,23 @@ function norma( spec, options, rawargs ) {
             }
 
             if( null != iname ) {
-              if( istar ) {
-                (out[iname] = (out[iname] || [])).push(val)
-              }
-              else {
-                out[specdef.respec[i].name] = val
-              }
+              (out[iname] = (out[iname] || [])).push(val)
             }
 
             k++
           }
-          else if( 1 < m.length ) {
-            for( var mI = 0; mI < m.length; mI++ ) {
-              val = args[j]
-              j++
-
-              if( !specdef.respec.object ) {
-                out[k] = val
-              }
-
-              if( null != iname ) {
-                (out[iname] = (out[iname] || [])).push(val)
-              }
-
-              k++
-            }
-          }
-        }
-        else {
-          if( !specdef.respec.object ) {
-            out[k] = void 0
-          }
-          k++
         }
       }
+      else {
+        if( !specdef.respec.object ) {
+          out[k] = void 0
+        }
+        k++
+      }
     }
-
-    return out;
   }
+
+  return out;
 }
 
 
@@ -225,5 +213,48 @@ function describe(args) {
 
 
 
-module.exports = norma
+function norma( spec, options, rawargs ) {
+  if( _.isArguments(options) || _.isArray(options ) ) {
+    rawargs = options
+    options = null
+  }
+  options = null == options ? defopts : _.extend({},defopts,options)
+
+  var specdef = compile( spec )
+
+  if( null == rawargs ) {
+    throw new Error('norma: no arguments variable; expected norma( "...", arguments )')
+  }
+  else return processargs(specdef, options, rawargs)
+}
+
+
+function handle( specdef, options, rawargs ) {
+  if( _.isArguments(options) || _.isArray(options ) ) {
+    rawargs = options
+    options = null
+  }
+  options = null == options ? defopts : _.extend({},defopts,options)
+
+  if( null == rawargs ) {
+    throw new Error('norma: no arguments variable; expected norma( "...", arguments ), or <compiled>( arguments )')
+  }
+  else return processargs(specdef, options, rawargs)
+}
+
+
+
+module.exports = function( spec, options, rawargs ) {
+  var specdef = compile( spec )
+  return handle( specdef, options, rawargs )
+}
+
+
+module.exports.compile = function( spec ) {
+  var specdef = compile( spec )
+
+  return function( options, rawargs ) {
+    return handle( specdef, options, rawargs )
+  }
+}
 

@@ -69,7 +69,7 @@ And of course, if your function is called with arguments that do not match the e
 
 If you're using this module, feel free to contact me on twitter if you have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
-Current Version: 0.1.1
+Current Version: 0.2.0
 
 Tested on: node 0.10.24
 
@@ -170,6 +170,22 @@ If you use the * modifier, and a name, then you'll get back an array listing all
   * "{foo:s*}" => { foo: ["v1","v2",...] }
 
 And that's it!
+
+
+## Compiling patterns
+
+You can compile a pattern ahead of time:
+
+```JavaScript
+var norma = require('norma')
+
+var needstring = norma.compile('s')
+
+function foo() {
+  var args = needstring( arguments )
+  console.log( 'string:'+args[0] ) 
+}
+```
 
 
 

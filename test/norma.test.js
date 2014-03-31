@@ -79,10 +79,8 @@ describe('norma', function(){
     assert.equal( "[ NaN ]", util.inspect( norma( 'A', [NaN] )))
     assert.equal( "[ Infinity ]", util.inspect( norma( 'Y', [Infinity] )))
 
-
     assert.equal( "[ [Error: a] ]", util.inspect( norma( 'e', [new Error('a')] )))
     assert.equal( "[ [TypeError: b] ]", util.inspect( norma( 'e', [new TypeError('b')] )))
-
   })
 
 
@@ -112,13 +110,11 @@ describe('norma', function(){
 
 
   it('no-args', function(){
-
     try { norma('s'); assert.fail(); }
     catch(e) { assert.ok(~e.message.indexOf('no arguments variable')) }
 
     try { var compiled = norma.compile('s'); compiled(); assert.fail(); }
     catch(e) { assert.ok(~e.message.indexOf('no arguments variable')) }
-
   })
 
 })

@@ -67,7 +67,7 @@ function compile( spec ) {
     restr.push('$')
 
     var re = new RegExp(restr.join(''))
-    specdef = specmap[spec] = {re:re,respec:respec,reindex:reindex}
+    specdef = specmap[spec] = {re:re,spec:spec,respec:respec,reindex:reindex}
   }
 
   return specdef
@@ -81,7 +81,7 @@ function processargs( specdef, options, rawargs ) {
   var outslots = specdef.re.exec(argdesc)
   if( !outslots ) {
     if( 'throw' == options.onfail ) {
-      throw new Error('norma: invalid arguments; expected: "'+spec+'", was: "'+argdesc+'"; values:'+args)
+      throw new Error('norma: invalid arguments; expected: "'+specdef.spec+'", was: ['+argdesc+']; values:'+args)
     }
     else return null;
   }

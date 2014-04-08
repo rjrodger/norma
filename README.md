@@ -69,7 +69,7 @@ And of course, if your function is called with arguments that do not match the e
 
 If you're using this module, feel free to contact me on twitter if you have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
-Current Version: 0.2.2
+Current Version: 0.2.3
 
 Tested on: node 0.10.24
 
@@ -141,7 +141,7 @@ This works like so:
 The syntax of the expression is similar to a regular expression (but it's not one!). You can use these special characters:
 
    * . - match any type
-   * ? - preceding type is optional   
+   * ? - preceding type is optional (also matches null, undefined, and NaN)
    * * - preceding type can occur any number of times (including zero)    
    * | - set of alternate types that are valid in this argument position
 

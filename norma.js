@@ -55,7 +55,11 @@ function compile( spec ) {
       }
 
       else {
-        restr.push(entry.type.mark)
+        if( '?' == entry.mod ) {
+          restr.push('[UNA'+entry.type.mark+']')
+        }
+        else restr.push(entry.type.mark);
+
         reindex[i]={index:index}
       }
 

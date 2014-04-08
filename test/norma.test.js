@@ -121,8 +121,14 @@ describe('norma', function(){
     try { norma('s',[1,{a:1},[10,20]]); assert.fail(); }
     catch(e) { 
       assert.equal(e.message, "norma: invalid arguments; expected: \"s\", was: [ioa]; values: 1,{ a: 1 },[ 10, 20 ]")
-    }
-    
+    }    
+  })
+
+
+  it('optional', function(){
+    assert.equal( "[ 1, null ]", util.inspect( norma( 'is?', [1,null] )))
+    assert.equal( "[ undefined, 1 ]", util.inspect( norma( 's?i', [undefined,1] )))
+    assert.equal( "[ NaN, 1 ]", util.inspect( norma( 's?i', [NaN,1] )))
   })
 
 })

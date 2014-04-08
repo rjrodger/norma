@@ -117,4 +117,12 @@ describe('norma', function(){
     catch(e) { assert.ok(~e.message.indexOf('no arguments variable')) }
   })
 
+  it('error-msg', function(){
+    try { norma('s',[1,{a:1},[10,20]]); assert.fail(); }
+    catch(e) { 
+      assert.equal(e.message, "norma: invalid arguments; expected: \"s\", was: [ioa]; values: 1,{ a: 1 },[ 10, 20 ]")
+    }
+    
+  })
+
 })

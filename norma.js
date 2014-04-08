@@ -10,7 +10,8 @@ var _ = require('underscore')
 var parser = require('./norma-parser')
 
 var defopts = {
-  onfail:'throw'
+  onfail:'throw',
+  desclen:33
 }
 
 var specmap = {}
@@ -81,7 +82,7 @@ function processargs( specdef, options, rawargs ) {
   var outslots = specdef.re.exec(argdesc)
   if( !outslots ) {
     if( 'throw' == options.onfail ) {
-      throw new Error('norma: invalid arguments; expected: "'+specdef.spec+'", was: ['+argdesc+']; values:'+args)
+      throw new Error('norma: invalid arguments; expected: "'+specdef.spec+'", was: ['+argdesc+']; values: '+descargs(args,options))
     }
     else return null;
   }
@@ -209,6 +210,18 @@ function describe(args) {
   })
 
   return desc.join('')
+}
+
+
+function descargs( args, options ) {
+  var desc = []
+  
+  _.each(args,function(arg){
+    var str = util.inspect(arg).substring(0,options.desclen)
+    desc.push(str)
+  })
+
+  return desc
 }
 
 

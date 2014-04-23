@@ -153,15 +153,23 @@ Now you can do this:
    * "s.*"  => [ string, anything... ] => [ "a", true ]; [ a, {}, [] ]; [ a, 3, {}, true, /hola/ ]
    * "s|if" => [ string or integer, function ] => [ "a", function(){...} ]; [ 1, function(){...} ];
 
-You can use whitespace to make things more readable:
+You can use whitespace and commas to make things more readable:
 
-  * "so?f" === "s o? f" 
+  * "so?f" === "s o? f" === "s, o?, f" 
+
+Alternates can also be optional, so this works too:
+
+   * "s|i? b" => [ optional string or integer, boolean ] => [ true ]; [ "a", true ]; [ 1, true ];
+
+Note that you'll get an _undefined_ as the placeholder:
+
+   * "s|i? b" on [ true ]; [ "a", true ]; [ 1, true ]; gives [ undefined, true ]; [ "a", true ]; [ 1, true ]; 
 
 You can also give arguments names. These are set as properties on the returned array, as well being assigned an index:
 
   * "foo:s" => [ "val", foo:"val" ]  // in util.inspect output format
 
-If really you want an object, use the form:
+If you really want an object, use the form:
 
   * "{foo:s}" => { foo:"val" }
 

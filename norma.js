@@ -17,6 +17,7 @@ var defopts = {
 var specmap = {}
 
 
+
 function compile( spec ) {
   var specdef = specmap[spec]
 
@@ -25,7 +26,7 @@ function compile( spec ) {
       var respec = parser.parse( spec )
     }
     catch(e) {
-      throw new Error('norma: '+e.message+'; spec:"'+spec+'", col:'+e.column+', line:'+e.line)
+      throw error('parse', 'norma: '+e.message+'; spec:"'+spec+'", col:'+e.column+', line:'+e.line)
     }
 
     var reindex = []
@@ -50,26 +51,34 @@ function compile( spec ) {
           restr.push(')')
         })
 
+        if( '?' == entry.mod ) {
+          restr.push('|[UNA]?')
+        }
+
         reindex[i]={index:index}
         index += count
       }
 
       else {
         if( '?' == entry.mod ) {
-          restr.push('[UNA'+entry.type.mark+']')
+          restr.push('[UNA'+entry.type.mark+']?')
         }
-        else restr.push(entry.type.mark);
+        else {
+          restr.push(entry.type.mark);
+          restr.push(entry.mod || '')
+        }
 
         reindex[i]={index:index}
       }
 
-      restr.push(entry.mod || '')
       reindex[i].mod = entry.mod
       restr.push(')')
       index++
       i++
     })
     restr.push('$')
+
+    //console.log(restr.join(''))
 
     var re = new RegExp(restr.join(''))
     specdef = specmap[spec] = {re:re,spec:spec,respec:respec,reindex:reindex}
@@ -86,7 +95,10 @@ function processargs( specdef, options, rawargs ) {
   var outslots = specdef.re.exec(argdesc)
   if( !outslots ) {
     if( 'throw' == options.onfail ) {
-      throw new Error('norma: invalid arguments; expected: "'+specdef.spec+'", was: ['+argdesc+']; values: '+descargs(args,options))
+      throw error(
+        'invalid_arguments', 
+        'norma: invalid arguments; expected: "'+specdef.spec+'", was: ['+argdesc+']; values: '+descargs(args,options),
+        {args:args,specdef:specdef,options:options})
     }
     else return null;
   }
@@ -229,7 +241,7 @@ function descargs( args, options ) {
 }
 
 
-
+/*
 function norma( spec, options, rawargs ) {
   if( _.isArguments(options) || _.isArray(options ) ) {
     rawargs = options
@@ -240,10 +252,11 @@ function norma( spec, options, rawargs ) {
   var specdef = compile( spec )
 
   if( null == rawargs ) {
-    throw new Error('norma: no arguments variable; expected norma( "...", arguments )')
+    throw error('init','norma: no arguments variable; expected norma( "...", arguments )', {arguments:arguments})
   }
   else return processargs(specdef, options, rawargs)
 }
+*/
 
 
 function handle( specdef, options, rawargs ) {
@@ -254,9 +267,59 @@ function handle( specdef, options, rawargs ) {
   options = null == options ? defopts : _.extend({},defopts,options)
 
   if( null == rawargs ) {
-    throw new Error('norma: no arguments variable; expected norma( "...", arguments ), or <compiled>( arguments )')
+    throw error(
+      'init', 
+      'norma: no arguments variable; expected norma( "...", arguments ), or <compiled>( arguments )',
+      {arguments:arguments}
+    )
   }
   else return processargs(specdef, options, rawargs)
+}
+
+
+
+
+// Create Error object with additional properties.
+//
+//   * __package__: "norma"
+//   * __code__:    error code string
+//   * __details__: context object
+function error( code, msg, details ) {
+  var e = new Error(msg)
+
+  e.norma   = true
+  e.package = 'norma'
+
+  e.code    = code
+  e.details = details || {}
+
+  // clean the stack
+  e.stack = cleanstack( e )
+
+  return e;
+}
+
+
+
+function cleanstack( error ) {
+  var stack = error ? error.stack : null
+  var out   = ''
+
+  if( stack ) {
+    var lines = stack.split('\n')
+    var done = false
+    for( var i = 1; i < lines.length; i++ ) {
+      var line = lines[i]
+
+      if( !line.match(/\/norma.js/) ) {
+        break;
+      }
+    }
+
+    out = ([lines[0]].concat(lines.slice(i))).join('\n')
+  }
+
+  return out
 }
 
 

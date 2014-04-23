@@ -32,14 +32,17 @@ describe('norma', function(){
       util.inspect( norma( 'i', [1.1] ))
       assert.fail();
     }
-    catch(e){ assert.ok(e.message.indexOf('invalid')) }
+    catch(e){ assert.equal('invalid_arguments',e.code); assert.ok(e.message.indexOf('invalid')) }
 
     assert.equal( "null", util.inspect( norma( 'i', {onfail:'null'}, [1.1] )))
   })
 
 
   it('bad-parse', function(){
-    try { norma.compile( 'q' ) } catch(e) { assert.equal('norma: not a type character: "q"; spec:"q", col:1, line:1',e.message) }
+    try { norma.compile( 'q' ) } catch(e) { 
+      assert.equal('parse',e.code)
+      assert.equal('norma: not a type character: "q"; spec:"q", col:1, line:1',e.message) 
+    }
   })
 
 
@@ -111,15 +114,23 @@ describe('norma', function(){
 
   it('no-args', function(){
     try { norma('s'); assert.fail(); }
-    catch(e) { assert.ok(~e.message.indexOf('no arguments variable')) }
+    catch(e) { 
+      assert.equal('init',e.code)
+      assert.ok(~e.message.indexOf('no arguments variable')) 
+    }
 
     try { var compiled = norma.compile('s'); compiled(); assert.fail(); }
-    catch(e) { assert.ok(~e.message.indexOf('no arguments variable')) }
+    catch(e) { 
+      assert.equal('init',e.code)
+      assert.ok(~e.message.indexOf('no arguments variable')) 
+    }
   })
+
 
   it('error-msg', function(){
     try { norma('s',[1,{a:1},[10,20]]); assert.fail(); }
     catch(e) { 
+      assert.equal('invalid_arguments',e.code)
       assert.equal(e.message, "norma: invalid arguments; expected: \"s\", was: [ioa]; values: 1,{ a: 1 },[ 10, 20 ]")
     }    
   })
@@ -129,6 +140,17 @@ describe('norma', function(){
     assert.equal( "[ 1, null ]", util.inspect( norma( 'is?', [1,null] )))
     assert.equal( "[ undefined, 1 ]", util.inspect( norma( 's?i', [undefined,1] )))
     assert.equal( "[ NaN, 1 ]", util.inspect( norma( 's?i', [NaN,1] )))
+  })
+
+
+  it('alt-opt', function(){
+    assert.equal( "[ true, 'c' ]", util.inspect( norma( 'bs|i?', [true, "c"] )))
+    assert.equal( "[ true, 1 ]", util.inspect( norma( 'bs|i?', [true, 1] )))
+    assert.equal( "[ true, undefined ]", util.inspect( norma( 'bs|i?', [true] )))
+
+    assert.equal( "[ true, 'c', false ]", util.inspect( norma( 'bs|i?b', [true, "c", false] )))
+    assert.equal( "[ true, 1, false ]", util.inspect( norma( 'bs|i?b', [true, 1, false] )))
+    assert.equal( "[ true, undefined, false ]", util.inspect( norma( 'bs|i?b', [true, false] )))
   })
 
 })

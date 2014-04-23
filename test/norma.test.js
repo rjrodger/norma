@@ -102,13 +102,43 @@ describe('norma', function(){
 
 
   it('star', function(){
+    assert.equal( "[ undefined ]", util.inspect( norma( 's*', [] )))
     assert.equal( "[ 'a' ]", util.inspect( norma( 's*', ['a'] )))
     assert.equal( "[ 'a', 'a' ]", util.inspect( norma( 's*', ['a','a'] )))
     assert.equal( "[ 'a', 1, 2, 3 ]", util.inspect( norma( 'si*', ['a',1,2,3] )))
+    assert.equal( "[ 'a', undefined ]", util.inspect( norma( 'si*', ['a'] )))
     assert.equal( "[ 'a', 1, 2, 3, true ]", util.inspect( norma( 's.*b', ['a',1,2,3,true] )))
+    assert.equal( "[ 'a', undefined, true ]", util.inspect( norma( 's.*b', ['a',true] )))
 
     assert.equal( "[ 'a', 1, 2, 3, foo: [ 1, 2, 3 ] ]", util.inspect( norma( 's foo:i*', ['a',1,2,3] )))
     assert.equal( "{ bar: 'a', foo: [ 1, 2, 3 ] }", util.inspect( norma( '{bar:s foo:i*}', ['a',1,2,3] )))
+  })
+
+
+  it('plus', function(){
+    try {
+      norma( 's+', [] )
+      assert.fail()
+    }
+    catch(e) { 
+      assert.equal('invalid_arguments',e.code)
+    }
+
+    assert.equal( "[ 'a' ]", util.inspect( norma( 's+', ['a'] )))
+    assert.equal( "[ 'a', 'a' ]", util.inspect( norma( 's+', ['a','a'] )))
+    assert.equal( "[ 'a', 1, 2, 3 ]", util.inspect( norma( 'si+', ['a',1,2,3] )))
+    assert.equal( "[ 'a', 1, 2, 3, true ]", util.inspect( norma( 's.+b', ['a',1,2,3,true] )))
+
+    try {
+      norma( 'si+', ['a'] )
+      assert.fail()
+    }
+    catch(e) { 
+      assert.equal('invalid_arguments',e.code)
+    }
+
+    assert.equal( "[ 'a', 1, 2, 3, foo: [ 1, 2, 3 ] ]", util.inspect( norma( 's foo:i+', ['a',1,2,3] )))
+    assert.equal( "{ bar: 'a', foo: [ 1, 2, 3 ] }", util.inspect( norma( '{bar:s foo:i+}', ['a',1,2,3] )))
   })
 
 

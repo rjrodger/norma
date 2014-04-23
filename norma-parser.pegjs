@@ -24,6 +24,7 @@ name
 mod
   = '?' {return '?' }
   / '*' {return '*' }
+  / '+' {return '+' }
 
 type
   = t:(typeatom ('|' typeatom)*) { return {mark:t[0],or:t[1]} }

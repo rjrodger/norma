@@ -119,7 +119,14 @@ function processargs( specdef, options, rawargs ) {
       if( found ) {
         var iname = specdef.respec[i].name
         var istar = '*' === specdef.respec[i].mod
+        var iplus = '+' === specdef.respec[i].mod
 
+        if( 0 == m.length && iplus ) {
+          throw error(
+            'invalid_arguments', 
+            'norma: invalid arguments; expected: "'+specdef.spec+'", was: ['+argdesc+']; values: '+descargs(args,options),
+            {args:args,specdef:specdef,options:options})
+        }
         if( 1 == m.length ) {
           val = args[j]
           j++
@@ -129,7 +136,7 @@ function processargs( specdef, options, rawargs ) {
           }
 
           if( null != iname ) {
-            if( istar ) {
+            if( istar || iplus ) {
               (out[iname] = (out[iname] || [])).push(val)
             }
             else {
@@ -240,23 +247,6 @@ function descargs( args, options ) {
   return desc
 }
 
-
-/*
-function norma( spec, options, rawargs ) {
-  if( _.isArguments(options) || _.isArray(options ) ) {
-    rawargs = options
-    options = null
-  }
-  options = null == options ? defopts : _.extend({},defopts,options)
-
-  var specdef = compile( spec )
-
-  if( null == rawargs ) {
-    throw error('init','norma: no arguments variable; expected norma( "...", arguments )', {arguments:arguments})
-  }
-  else return processargs(specdef, options, rawargs)
-}
-*/
 
 
 function handle( specdef, options, rawargs ) {

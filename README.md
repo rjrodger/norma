@@ -123,12 +123,10 @@ JavaScript types. Each type is a single character. These are:
    * e - error     
    * N - null      
    * U - undefined 
-   * A - nan       
-   * Y - infinity  
+   * A - NaN       
+   * Y - Infinity  
 
-Note that you can also test for the more pathological types, like _NaN_, or _Infinity_.
-
-You list the types you expect, in the order you expect. The norma
+You list the types you expect, in the order you expect. The _norma_
 module will return an array with each position corresponding to the position of each type letter.
 
 This works like so:
@@ -143,13 +141,15 @@ The syntax of the expression is similar to a regular expression (but it's not on
    * . - match any type
    * ? - preceding type is optional (also matches null, undefined, and NaN)
    * * - preceding type can occur any number of times (including zero)    
+   * + - preceding type can occur any number of times (but must occur at least once)    
    * | - set of alternate types that are valid in this argument position
 
 Now you can do this:
 
    * "so?f" => [ string, optional object, function ] => [ "a", function(){...} ]; [ "a", {b:1}, function(){...} ]
    * "s?n"  => [ optional string, number ] => [ "a", 1 ]; [ 1 ]
-   * "si*"  => [ string, integers... ] => [ "a", 1 ]; [ a, 1, 2 ]; [ a, 1, 2, 3 ]
+   * "si*"  => [ string, zero or more integers... ] => [ "a" ]; [ "a", 1 ]; [ a, 1, 2 ]; [ a, 1, 2, 3 ]
+   * "si+"  => [ string, one or more integers... ] => [ "a", 1 ]; [ a, 1, 2 ]; [ a, 1, 2, 3 ]
    * "s.*"  => [ string, anything... ] => [ "a", true ]; [ a, {}, [] ]; [ a, 3, {}, true, /hola/ ]
    * "s|if" => [ string or integer, function ] => [ "a", function(){...} ]; [ 1, function(){...} ];
 
@@ -157,11 +157,16 @@ You can use whitespace and commas to make things more readable:
 
   * "so?f" === "s o? f" === "s, o?, f" 
 
+If no match is found for a given position, _undefined_ is used as the placeholder:
+
+  * "si*" on [ "a" ] gives [ "a", undefined ]
+  * "s.*b" on [ "a", true ] gives [ "a", undefined, true ]
+
 Alternates can also be optional, so this works too:
 
    * "s|i? b" => [ optional string or integer, boolean ] => [ true ]; [ "a", true ]; [ 1, true ];
 
-Note that you'll get an _undefined_ as the placeholder:
+Note that you'll get an _undefined_ as the placeholder, as usual:
 
    * "s|i? b" on [ true ]; [ "a", true ]; [ 1, true ]; gives [ undefined, true ]; [ "a", true ]; [ 1, true ]; 
 

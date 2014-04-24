@@ -1,8 +1,8 @@
-norma [docco](http://rjrodger.github.io/norma/doc/norma.html)
+norma
 =====
 
 ### A function argument organizer
-
+<small>[docco](http://rjrodger.github.io/norma/doc/norma.html)<small>
 
 Sometimes you want your functions to accept optional arguments. It makes your API nicer.
 

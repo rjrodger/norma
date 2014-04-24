@@ -69,7 +69,7 @@ And of course, if your function is called with arguments that do not match the e
 
 If you're using this module, feel free to contact me on twitter if you have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
 
-Current Version: 0.2.4
+Current Version: 0.2.5
 
 Tested on: node 0.10.26
 

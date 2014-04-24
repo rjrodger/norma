@@ -1,6 +1,6 @@
 {
   "name": "norma",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "A function argument organizer",
   "main": "norma.js",
   "scripts": {
@@ -31,6 +31,6 @@
   },
   "dependencies": {
     "underscore": "~1.6.0",
-    "eraro": "~0.1.1"
+    "eraro": "~0.1.2"
   }
 }

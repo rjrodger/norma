@@ -209,6 +209,9 @@ signature expression, and then it builds an internal regular
 expression to match the function argument types.
 
 
+The source code is [annotated](http://rjrodger.github.io/norma/doc/norma.html).
+
+
 
 # Development
 

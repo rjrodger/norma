@@ -91,6 +91,8 @@ describe('norma', function(){
     var n1 = norma.compile('s')
     assert.equal( "[ 'foo' ]", util.inspect( n1( ['foo'] )))
     assert.equal( "[ 'bar' ]", util.inspect( n1( ['bar'] )))
+
+    assert.equal("{ spec: 's', re: '/^(s)$/' }",''+n1)
   })
 
 
@@ -122,6 +124,7 @@ describe('norma', function(){
     }
     catch(e) { 
       assert.equal('invalid_arguments',e.code)
+      assert.equal('norma: invalid arguments; expected: "s+", was: []; values: ',e.message)
     }
 
     assert.equal( "[ 'a' ]", util.inspect( norma( 's+', ['a'] )))

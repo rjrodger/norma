@@ -1,34 +1,56 @@
 /* Copyright (c) 2014 Richard Rodger, MIT License */
+/* jshint node:true, asi:true, eqnull:true */
 "use strict";
 
 
+
+// #### System modules
 var util = require('util')
 
-var _ = require('underscore')
 
 
+// #### External modules
+var _     = require('underscore')
+var error = require('eraro')({package:'norma'})
+
+
+
+// #### Internal modules
 var parser = require('./norma-parser')
 
+
+
+// Default options.
 var defopts = {
   onfail:'throw',
   desclen:33
 }
 
+
+
+// Cache of previously seen type specs.
 var specmap = {}
 
 
 
+// #### Compile type spec into a regexp
 function compile( spec ) {
-  var specdef = specmap[spec]
+  if( null == spec ) throw error('no_spec', 'no argument specification');
 
+  var specdef = specmap[spec]
+  var respec
+
+  // Parse and build specdef if not cached.
   if( null == specdef ) {
     try {
-      var respec = parser.parse( spec )
+      respec = parser.parse( spec )
     }
     catch(e) {
-      throw error('parse', 'norma: '+e.message+'; spec:"'+spec+'", col:'+e.column+', line:'+e.line)
+      throw error('parse', e.message+'; spec:"'+spec+'", col:'+e.column+', line:'+e.line)
     }
 
+
+    // Build regex.
     var reindex = []
     var index   = 1
     var restr = ['^']
@@ -78,8 +100,6 @@ function compile( spec ) {
     })
     restr.push('$')
 
-    //console.log(restr.join(''))
-
     var re = new RegExp(restr.join(''))
     specdef = specmap[spec] = {re:re,spec:spec,respec:respec,reindex:reindex}
   }
@@ -88,21 +108,26 @@ function compile( spec ) {
 }
 
 
+
+// #### Create output array or object with organised argument values.
 function processargs( specdef, options, rawargs ) {
   var args = Array.prototype.slice.call(rawargs||[])
   var argdesc = describe( args )
 
+  // Match the spec regexp against the argument types regexp.
   var outslots = specdef.re.exec(argdesc)
   if( !outslots ) {
     if( 'throw' == options.onfail ) {
       throw error(
         'invalid_arguments', 
-        'norma: invalid arguments; expected: "'+specdef.spec+'", was: ['+argdesc+']; values: '+descargs(args,options),
+        'invalid arguments; expected: "'+specdef.spec+'", was: ['+argdesc+']; values: '+descargs(args,options),
         {args:args,specdef:specdef,options:options})
     }
     else return null;
   }
 
+  // Build the organised output.
+  // Need to do some index housekeeping as regexp has additional groups.
   var out = specdef.respec.object ? {} : []
   var offset = 0
   for(var i = 0, j = 0, k = 0; i < specdef.reindex.length; i++ ) {
@@ -115,16 +140,16 @@ function processargs( specdef, options, rawargs ) {
     
     if( null != indexspec.index) {
       var m = outslots[indexspec.index]
-      var found = '' != m
+      var found = ('' !== m)
       if( found ) {
         var iname = specdef.respec[i].name
         var istar = '*' === specdef.respec[i].mod
         var iplus = '+' === specdef.respec[i].mod
 
-        if( 0 == m.length && iplus ) {
+        if( 0 === m.length && iplus ) {
           throw error(
             'invalid_arguments', 
-            'norma: invalid arguments; expected: "'+specdef.spec+'", was: ['+argdesc+']; values: '+descargs(args,options),
+            'invalid arguments; expected: "'+specdef.spec+'", was: ['+argdesc+']; values: '+descargs(args,options),
             {args:args,specdef:specdef,options:options})
         }
         if( 1 == m.length ) {
@@ -177,14 +202,18 @@ function processargs( specdef, options, rawargs ) {
 
 
 
+// #### Create a type description of the arguments array
+// Example: ["a",1] => "si".
 function describe(args) {
   var desc = []
 
   args.forEach(function(arg){
+
     if( _.isString(arg) ) {
       desc.push('s')
     }
-    // integer
+
+    // Need to check for integer first.
     else if( (!isNaN(arg) && ((arg | 0) === parseFloat(arg))) ) {
       desc.push('i')
     }
@@ -215,9 +244,12 @@ function describe(args) {
     else if( _.isArguments(arg) ) {
       desc.push('g')
     }
+
+    // Use standard Node.js API for _isError_ test.
     else if( util.isError(arg) ) {
       desc.push('e')
     }
+
     else if( _.isNull(arg) ) {
       desc.push('N')
     }
@@ -227,6 +259,8 @@ function describe(args) {
     else if( _.isObject(arg) ) {
       desc.push('o')
     }
+
+    // "q" means an unknown type.
     else {
       desc.push('q')
     }
@@ -236,6 +270,8 @@ function describe(args) {
 }
 
 
+// #### Describe arguments array for error message
+// Avoids over long messages.
 function descargs( args, options ) {
   var desc = []
   
@@ -249,6 +285,8 @@ function descargs( args, options ) {
 
 
 
+// #### Perform the actual organisation.
+// Options are ... optional.
 function handle( specdef, options, rawargs ) {
   if( _.isArguments(options) || _.isArray(options ) ) {
     rawargs = options
@@ -259,7 +297,7 @@ function handle( specdef, options, rawargs ) {
   if( null == rawargs ) {
     throw error(
       'init', 
-      'norma: no arguments variable; expected norma( "...", arguments ), or <compiled>( arguments )',
+      'no arguments variable; expected norma( "...", arguments ), or <compiled>( arguments )',
       {arguments:arguments}
     )
   }
@@ -268,63 +306,25 @@ function handle( specdef, options, rawargs ) {
 
 
 
-
-// Create Error object with additional properties.
-//
-//   * __package__: "norma"
-//   * __code__:    error code string
-//   * __details__: context object
-function error( code, msg, details ) {
-  var e = new Error(msg)
-
-  e.norma   = true
-  e.package = 'norma'
-
-  e.code    = code
-  e.details = details || {}
-
-  // clean the stack
-  e.stack = cleanstack( e )
-
-  return e;
-}
-
-
-
-function cleanstack( error ) {
-  var stack = error ? error.stack : null
-  var out   = ''
-
-  if( stack ) {
-    var lines = stack.split('\n')
-    var done = false
-    for( var i = 1; i < lines.length; i++ ) {
-      var line = lines[i]
-
-      if( !line.match(/\/norma.js/) ) {
-        break;
-      }
-    }
-
-    out = ([lines[0]].concat(lines.slice(i))).join('\n')
-  }
-
-  return out
-}
-
-
-
+// #### Primary API
 module.exports = function( spec, options, rawargs ) {
   var specdef = compile( spec )
   return handle( specdef, options, rawargs )
 }
 
 
+
+// #### Compile spec for later use
+// _toString_ shows you the constructed regexp (for debugging).
 module.exports.compile = function( spec ) {
   var specdef = compile( spec )
 
-  return function( options, rawargs ) {
+  var out = function( options, rawargs ) {
     return handle( specdef, options, rawargs )
   }
+  out.toString = function() {
+    return util.inspect({spec:specdef.spec, re:''+specdef.re})
+  }
+  return out
 }
 

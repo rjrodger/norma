@@ -5,7 +5,10 @@
   "main": "norma.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha test/*.test.js",
-    "build": "./node_modules/.bin/pegjs norma-parser.pegjs"
+    "build": "./node_modules/.bin/pegjs norma-parser.pegjs",
+    "jshint": "./node_modules/.bin/jshint norma.js",
+    "docco": "./node_modules/.bin/docco norma.js -o doc",
+    "gh-pages-doc": "cp -r doc/* ../gh-pages/norma/doc"
   },
   "repository": {
     "type": "git",
@@ -22,9 +25,12 @@
   "homepage": "https://github.com/rjrodger/norma",
   "devDependencies": {
     "pegjs": "~0.8.0",
-    "mocha": "~1.17.1"
+    "mocha": "~1.17.1",
+    "docco": "~0.6.3",
+    "jshint": "~2.5.0"
   },
   "dependencies": {
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "eraro": "~0.1.1"
   }
 }

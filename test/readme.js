@@ -13,7 +13,8 @@ myAPI.doStuff = function(){
 
 
 myAPI.doStuff( 'the-stuff', function( err, result ){ console.log(result) } )
-myAPI.doStuff( 'the-stuff', { b:'b'}, function( err, result ){ console.log(result) } )
+myAPI.doStuff( 'the-stuff', { b:'b'}, 
+               function( err, result ){ console.log(result) } )
 
 
 var norma = require('..')
@@ -29,7 +30,8 @@ myAPI.doStuff = function(){
 }
 
 myAPI.doStuff( 'the-stuff', function( err, result ){ console.log(result) } )
-myAPI.doStuff( 'the-stuff', { b:'b'}, function( err, result ){ console.log(result) } )
+myAPI.doStuff( 'the-stuff', { b:'b'}, 
+               function( err, result ){ console.log(result) } )
 
 
 myAPI.doStuff = function(){
@@ -40,7 +42,8 @@ myAPI.doStuff = function(){
 }
 
 myAPI.doStuff( 'the-stuff', function( err, result ){ console.log(result) } )
-myAPI.doStuff( 'the-stuff', { b:'b'}, function( err, result ){ console.log(result) } )
+myAPI.doStuff( 'the-stuff', { b:'b'}, 
+               function( err, result ){ console.log(result) } )
 
 
 function foo() {

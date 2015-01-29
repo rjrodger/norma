@@ -22,8 +22,10 @@ describe('norma', function(){
     assert.equal( "[ 'a', undefined ]", util.inspect( norma( 's i?', ["a"] )))
     assert.equal( "[ undefined, 1 ]", util.inspect( norma( 's? i', [1] )))
     assert.equal( "[ 1.1 ]", util.inspect( norma( 'n', [1.1] )))
-    assert.equal( "[ 'b', 2, foo: 'b', bar: 2 ]", util.inspect( norma( 'foo:s bar:i', ["b",2] )))
-    assert.equal( "{ foo: 'b', bar: 2 }", util.inspect( norma( '{foo:s bar:i}', ["b",2] )))
+    assert.equal( "[ 'b', 2, foo: 'b', bar: 2 ]", 
+                  util.inspect( norma( 'foo:s bar:i', ["b",2] )))
+    assert.equal( "{ foo: 'b', bar: 2 }", 
+                  util.inspect( norma( '{foo:s bar:i}', ["b",2] )))
   })
 
 
@@ -68,8 +70,12 @@ describe('norma', function(){
   it('misc-objects', function(){
     assert.equal( "[ /a/ ]", util.inspect( norma( 'r', [/a/] )))
     assert.equal( "[ 1, /a/ ]", util.inspect( norma( 'ir', [1,/a/] )))
-    assert.equal( "[ Mon Feb 10 2014 23:29:53 GMT+0000 (GMT) ]", util.inspect( norma( 'd', [new Date("2014-02-10T23:29:53.281Z")] )))
-    assert.equal( "[ Mon Feb 10 2014 23:29:53 GMT+0000 (GMT), 9.9 ]", util.inspect( norma( 'dn', [new Date("2014-02-10T23:29:53.281Z"),9.9] )))
+    assert.equal( 
+      "[ Mon Feb 10 2014 23:29:53 GMT+0000 (GMT) ]", 
+      util.inspect( norma( 'd', [new Date("2014-02-10T23:29:53.281Z")] )))
+    assert.equal( 
+      "[ Mon Feb 10 2014 23:29:53 GMT+0000 (GMT), 9.9 ]", 
+      util.inspect( norma( 'dn', [new Date("2014-02-10T23:29:53.281Z"),9.9] )))
 
     function test_args(){
       assert.equal( "[ { '0': 999 } ]", util.inspect( norma( 'g', [arguments] )))

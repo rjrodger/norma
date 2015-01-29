@@ -1,12 +1,30 @@
-norma
-=====
+# norma
 
 ### A function argument organizer
-<small>[docco](http://rjrodger.github.io/norma/doc/norma.html)<small>
 
-Sometimes you want your functions to accept optional arguments. It makes your API nicer.
+Sometimes you want your functions to accept optional arguments. It
+makes your API nicer.
 
-For example, the basic function signature is:
+
+### Support
+
+If you're using this module, feel free to contact me on twitter if you
+have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
+
+Current Version: 0.3.0
+
+Tested on: node 0.10.26
+
+[![Build Status](https://travis-ci.org/rjrodger/norma.png?branch=master)](https://travis-ci.org/rjrodger/norma)
+
+[Annotated Source](http://rjrodger.github.io/norma/doc/norma.html)
+
+[![Gitter chat](https://badges.gitter.im/rjrodger/norma.png)](https://gitter.im/rjrodger/norma)
+
+
+# Usage
+
+Let's take an example. Say your the basic function signature is:
 
 ```JavaScript
 myAPI.doStuff( 'the-stuff', function( err, result ){ ... } )

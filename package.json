@@ -1,21 +1,26 @@
 {
   "name": "norma",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "description": "A function argument organizer",
   "main": "norma.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha test/*.test.js",
-    "build": "./node_modules/.bin/pegjs norma-parser.pegjs",
-    "jshint": "./node_modules/.bin/jshint norma.js",
-    "docco": "./node_modules/.bin/docco norma.js -o doc",
-    "gh-pages-doc": "cp -r doc/* ../gh-pages/norma/doc"
+    "test": "./test.sh",
+    "build": "./build.sh"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/rjrodger/norma.git"
   },
   "keywords": [
-    "norma"
+    "norma",
+    "function",
+    "method",
+    "parameter",
+    "argument",
+    "parameters",
+    "arguments",
+    "type",
+    "signature"
   ],
   "author": "Richard Rodger (http://richardrodger.com)",
   "license": "MIT",
@@ -24,10 +29,11 @@
   },
   "homepage": "https://github.com/rjrodger/norma",
   "devDependencies": {
-    "pegjs": "~0.8.0",
-    "mocha": "~1.17.1",
     "docco": "~0.6.3",
-    "jshint": "~2.5.0"
+    "jshint": "~2.6.0",
+    "mocha": "~2.1.0",
+    "pegjs": "~0.8.0",
+    "uglify-js": "~2.4.16"
   },
   "dependencies": {
     "lodash": "~2.4.1",

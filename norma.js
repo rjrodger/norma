@@ -118,7 +118,8 @@ function processargs( specdef, options, rawargs ) {
     if( 'throw' == options.onfail ) {
       throw error(
         'invalid_arguments', 
-        'invalid arguments; expected: "'+specdef.spec+'", was: ['+argdesc+']; values: '+descargs(args,options),
+        'invalid arguments; expected: "'+specdef.spec+
+          '", was: ['+argdesc+']; values: '+descargs(args,options),
         {args:args,specdef:specdef,options:options})
     }
     else return null;
@@ -127,7 +128,6 @@ function processargs( specdef, options, rawargs ) {
   // Build the organised output.
   // Need to do some index housekeeping as regexp has additional groups.
   var out = specdef.respec.object ? {} : []
-  var offset = 0
   for(var i = 0, j = 0, k = 0; i < specdef.reindex.length; i++ ) {
     var indexspec = specdef.reindex[i]
     var val = void 0
@@ -147,7 +147,8 @@ function processargs( specdef, options, rawargs ) {
         if( 0 === m.length && iplus ) {
           throw error(
             'invalid_arguments', 
-            'invalid arguments; expected: "'+specdef.spec+'", was: ['+argdesc+']; values: '+descargs(args,options),
+            'invalid arguments; expected: "'+specdef.spec+
+              '", was: ['+argdesc+']; values: '+descargs(args,options),
             {args:args,specdef:specdef,options:options})
         }
         if( 1 == m.length ) {
@@ -295,7 +296,8 @@ function handle( specdef, options, rawargs ) {
   if( null == rawargs ) {
     throw error(
       'init', 
-      'no arguments variable; expected norma( "...", arguments ), or <compiled>( arguments )',
+      'no arguments variable; expected norma( "...", arguments ), '+
+        'or <compiled>( arguments )',
       {arguments:arguments}
     )
   }

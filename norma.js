@@ -1,23 +1,22 @@
-/* Copyright (c) 2014 Richard Rodger, MIT License */
+/* Copyright (c) 2014-2015 Richard Rodger, MIT License */
 /* jshint node:true, asi:true, eqnull:true */
 "use strict";
 
+
+// TODO: allow _ and $ in named args !!! doh!
 
 
 // #### System modules
 var util = require('util')
 
 
-
 // #### External modules
-var _     = require('underscore')
+var _     = require('lodash')
 var error = require('eraro')({package:'norma'})
-
 
 
 // #### Internal modules
 var parser = require('./norma-parser')
-
 
 
 // Default options.
@@ -27,10 +26,8 @@ var defopts = {
 }
 
 
-
 // Cache of previously seen type specs.
 var specmap = {}
-
 
 
 // #### Compile type spec into a regexp
@@ -38,75 +35,76 @@ function compile( spec ) {
   if( null == spec ) throw error('no_spec', 'no argument specification');
 
   var specdef = specmap[spec]
-  var respec
+  if( null != specdef ) return specdef;
 
-  // Parse and build specdef if not cached.
-  if( null == specdef ) {
-    try {
-      respec = parser.parse( spec )
-    }
-    catch(e) {
-      throw error('parse', e.message+'; spec:"'+spec+'", col:'+e.column+', line:'+e.line)
-    }
+  var respec = parse_spec( spec )
 
+  // Build regex.
+  var reindex = []
+  var index   = 1
+  var restr = ['^']
+  var i = 0
+  respec.forEach(function(entry){
+    restr.push('(')
 
-    // Build regex.
-    var reindex = []
-    var index   = 1
-    var restr = ['^']
-    var i = 0
-    respec.forEach(function(entry){
+    if( entry.type.or && 0 < entry.type.or.length ) {
+      var count = 1
+
       restr.push('(')
-
-      if( entry.type.or && 0 < entry.type.or.length ) {
-        var count = 1
-
-        restr.push('(')
-        restr.push(entry.type.mark)
-        restr.push(')')
-
-        entry.type.or.forEach(function(or){
-          restr.push('|')
-          restr.push('(')
-          restr.push(or[1])
-          count++
-          restr.push(')')
-        })
-
-        if( '?' == entry.mod ) {
-          restr.push('|[UNA]?')
-        }
-
-        reindex[i]={index:index}
-        index += count
-      }
-
-      else {
-        if( '?' == entry.mod ) {
-          restr.push('[UNA'+entry.type.mark+']?')
-        }
-        else {
-          restr.push(entry.type.mark);
-          restr.push(entry.mod || '')
-        }
-
-        reindex[i]={index:index}
-      }
-
-      reindex[i].mod = entry.mod
+      restr.push(entry.type.mark)
       restr.push(')')
-      index++
-      i++
-    })
-    restr.push('$')
 
-    var re = new RegExp(restr.join(''))
-    specdef = specmap[spec] = {re:re,spec:spec,respec:respec,reindex:reindex}
-  }
+      entry.type.or.forEach(function(or){
+        restr.push('|')
+        restr.push('(')
+        restr.push(or[1])
+        count++
+        restr.push(')')
+      })
 
-  return specdef
+      if( '?' == entry.mod ) {
+        restr.push('|[UNA]?')
+      }
+
+      reindex[i]={index:index}
+      index += count
+    }
+
+    else {
+      if( '?' == entry.mod ) {
+        restr.push('[UNA'+entry.type.mark+']?')
+      }
+      else {
+        restr.push(entry.type.mark);
+        restr.push(entry.mod || '')
+      }
+
+      reindex[i]={index:index}
+    }
+
+    reindex[i].mod = entry.mod
+    restr.push(')')
+    index++
+    i++
+  })
+  restr.push('$')
+
+  var re = new RegExp(restr.join(''))
+  specdef = specmap[spec] = {re:re,spec:spec,respec:respec,reindex:reindex}
+
+  return specdef;
 }
 
+
+function parse_spec( spec ) {
+  try {
+    return parser.parse( spec )
+  }
+  catch(e) {
+    throw error('parse', e.message+'; spec:"'+spec+
+                '", col:'+e.column+', line:'+e.line)
+  }
+}
 
 
 // #### Create output array or object with organised argument values.

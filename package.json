@@ -30,7 +30,7 @@
     "jshint": "~2.5.0"
   },
   "dependencies": {
-    "underscore": "~1.6.0",
-    "eraro": "~0.1.2"
+    "lodash": "~2.4.1",
+    "eraro": "~0.4.1"
   }
 }

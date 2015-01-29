@@ -1,4 +1,4 @@
-/* Copyright (c) 2014 Richard Rodger, MIT License */
+/* Copyright (c) 2014-2015 Richard Rodger, MIT License */
 "use strict";
 
 
@@ -7,7 +7,7 @@
 var util   = require('util')
 var assert = require('assert')
 
-var _     = require('underscore')
+var _     = require('lodash')
 var norma = require('..')
 
 

@@ -70,12 +70,6 @@ describe('norma', function(){
   it('misc-objects', function(){
     assert.equal( "[ /a/ ]", util.inspect( norma( 'r', [/a/] )))
     assert.equal( "[ 1, /a/ ]", util.inspect( norma( 'ir', [1,/a/] )))
-    assert.equal( 
-      "[ Mon Feb 10 2014 23:29:53 GMT+0000 (GMT) ]", 
-      util.inspect( norma( 'd', [new Date("2014-02-10T23:29:53.281Z")] )))
-    assert.equal( 
-      "[ Mon Feb 10 2014 23:29:53 GMT+0000 (GMT), 9.9 ]", 
-      util.inspect( norma( 'dn', [new Date("2014-02-10T23:29:53.281Z"),9.9] )))
 
     function test_args(){
       assert.equal( "[ { '0': 999 } ]", util.inspect( norma( 'g', [arguments] )))
@@ -87,9 +81,6 @@ describe('norma', function(){
 
     assert.equal( "[ NaN ]", util.inspect( norma( 'A', [NaN] )))
     assert.equal( "[ Infinity ]", util.inspect( norma( 'Y', [Infinity] )))
-
-    assert.equal( "[ [Error: a] ]", util.inspect( norma( 'e', [new Error('a')] )))
-    assert.equal( "[ [TypeError: b] ]", util.inspect( norma( 'e', [new TypeError('b')] )))
   })
 
 

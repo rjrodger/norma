@@ -222,7 +222,7 @@
   }
   <span class="hljs-keyword">catch</span>(e) {
     <span class="hljs-keyword">throw</span> error(<span class="hljs-string">'parse'</span>, e.message+<span class="hljs-string">'; spec:"'</span>+spec+
-                <span class="hljs-string">'", col:'</span>+e.column+<span class="hljs-string">', line:'</span>+e.line)
+                <span class="hljs-string">'", col:'</span>+e.location.start.column+<span class="hljs-string">', line:'</span>+e.location.start.line)
   }
 }</pre></div></div>
             
@@ -235,7 +235,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <h4 id="create-output-array-or-object-with-organised-argument-values-">Create output array or object with organised argument values.</h4>
+              <h4 id="create-output-array-or-object-with-organised-argument-values">Create output array or object with organised argument values.</h4>
 
             </div>
             
@@ -503,7 +503,7 @@ Need to do some index housekeeping as regexp has additional groups.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <h4 id="perform-the-actual-organisation-">Perform the actual organisation.</h4>
+              <h4 id="perform-the-actual-organisation">Perform the actual organisation.</h4>
 <p>Options are … optional.</p>
 
             </div>

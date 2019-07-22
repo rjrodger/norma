@@ -102,7 +102,7 @@ function parse_spec( spec ) {
   }
   catch(e) {
     throw error('parse', e.message+'; spec:"'+spec+
-                '", col:'+e.column+', line:'+e.line)
+                '", col:'+e.location.start.column+', line:'+e.location.start.line)
   }
 }
 

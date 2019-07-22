@@ -72,7 +72,7 @@ describe('norma', function(){
     assert.equal( "[ 1, /a/ ]", util.inspect( norma( 'ir', [1,/a/] )))
 
     function test_args(){
-      assert.equal( "[ { '0': 999 } ]", util.inspect( norma( 'g', [arguments] )))
+      assert.equal( "[ [Arguments] { '0': 999 } ]", util.inspect( norma( 'g', [arguments] )))
     }
     test_args(999)
 

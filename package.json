@@ -7,6 +7,7 @@
     "test": "./test.sh",
     "build": "./build.sh",
     "clean": "rm -rf node_modules yarn.lock package-lock.json",
+    "reset": "npm run clean && npm i && npm test",
     "repo-tag": "REPO_VERSION=`node -e \"console.log(require('./package').version)\"` && echo TAG: v$REPO_VERSION && git commit -a -m v$REPO_VERSION && git push && git tag v$REPO_VERSION && git push --tags",
     "repo-publish": "npm run repo-tag && npm publish --access public"
   },
@@ -33,14 +34,17 @@
   "homepage": "https://github.com/rjrodger/norma",
   "devDependencies": {
     "docco": "^0.8.0",
-    "jshint": "^2.10.2",
-    "mocha": "^6.2.0",
+    "jshint": "^2.10.3",
+    "mocha": "^6.2.2",
     "pegjs": "^0.10.0",
-    "uglify-js": "^3.6.0"
+    "uglify-js": "^3.7.1"
   },
   "dependencies": {
-    "eraro": "^1.1.0",
-    "lodash": "^4.17.15"
+    "eraro": "^2.0.0",
+    "lodash.isarguments": "^3.1.0",
+    "lodash.isdate": "^4.0.1",
+    "lodash.isnan": "^3.0.2",
+    "lodash.isregexp": "^4.0.1"
   },
   "files": [
     "README.md",

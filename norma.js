@@ -11,7 +11,12 @@ var util = require('util')
 
 
 // #### External modules
-var _     = require('lodash')
+var _ = {}
+_.isNaN = require('lodash.isnan')
+_.isRegExp = require('lodash.isregexp') 
+_.isDate = require('lodash.isdate')
+_.isArguments = require('lodash.isarguments')
+
 var error = require('eraro')({package:'norma'})
 
 
@@ -208,7 +213,7 @@ function describe(args) {
 
   args.forEach(function(arg){
 
-    if( _.isString(arg) ) {
+    if( 'string' === typeof(arg) ) {
       desc.push('s')
     }
 
@@ -222,16 +227,16 @@ function describe(args) {
     else if( Infinity === arg ) {
       desc.push('Y')
     }
-    else if( _.isNumber(arg) ) {
+    else if( 'number' === typeof(arg) ) {
       desc.push('n')
     }
-    else if( _.isBoolean(arg) ) {
+    else if( 'boolean' === typeof(arg) ) {
       desc.push('b')
     }
-    else if( _.isFunction(arg) ) {
+    else if( 'function' === typeof(arg) ) {
       desc.push('f')
     }
-    else if( _.isArray(arg) ) {
+    else if( Array.isArray(arg) ) {
       desc.push('a')
     }
     else if( _.isRegExp(arg) ) {
@@ -249,13 +254,13 @@ function describe(args) {
       desc.push('e')
     }
 
-    else if( _.isNull(arg) ) {
+    else if( null === arg ) {
       desc.push('N')
     }
-    else if( _.isUndefined(arg) ) {
+    else if( undefined === arg ) {
       desc.push('U')
     }
-    else if( _.isObject(arg) ) {
+    else if( 'object' === typeof(arg) ) {
       desc.push('o')
     }
 
@@ -274,7 +279,7 @@ function describe(args) {
 function descargs( args, options ) {
   var desc = []
   
-  _.each(args,function(arg){
+  args.forEach(function(arg){
     var str = util.inspect(arg).substring(0,options.desclen)
     desc.push(str)
   })
@@ -287,11 +292,11 @@ function descargs( args, options ) {
 // #### Perform the actual organisation.
 // Options are ... optional.
 function handle( specdef, options, rawargs ) {
-  if( _.isArguments(options) || _.isArray(options ) ) {
+  if( _.isArguments(options) || Array.isArray(options ) ) {
     rawargs = options
     options = null
   }
-  options = null == options ? defopts : _.extend({},defopts,options)
+  options = null == options ? defopts : Object.assign({},defopts,options)
 
   if( null == rawargs ) {
     throw error(

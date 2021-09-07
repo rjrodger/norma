@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "isolatedModules": true,
+    "module": "commonjs",
+    "noEmitOnError": true,
+    "outDir":"dist",
+    "resolveJsonModule": true,
+    "rootDir":"src",
+    "strict": true,
+    "target": "ES2019"
+  },
+  "exclude": [
+    "test",
+    "dist",
+    "node_modules"
+  ]
+}

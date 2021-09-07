@@ -1,58 +1,45 @@
 {
   "name": "norma",
-  "version": "2.0.2",
-  "description": "A function argument organizer",
-  "main": "norma.js",
-  "scripts": {
-    "test": "./test.sh",
-    "build": "./build.sh",
-    "clean": "rm -rf node_modules yarn.lock package-lock.json",
-    "prettier": "prettier --write --no-semi --single-quote norma.js lib/*.js test/*.js",
-    "reset": "npm run clean && npm i && npm test",
-    "repo-tag": "REPO_VERSION=`node -e \"console.log(require('./package').version)\"` && echo TAG: v$REPO_VERSION && git commit -a -m v$REPO_VERSION && git push && git tag v$REPO_VERSION && git push --tags;",
-    "repo-publish": "npm run prettier && npm test && npm run repo-tag && npm publish --registry http://registry.npmjs.org "
-  },
+  "version": "3.0.0",
+  "main": "dist/norma.js",
+  "type": "commonjs",
+  "types": "dist/norma.d.ts",
+  "description": "Normalize and validate object structures.",
+  "homepage": "https://github.com/rjrodger/norma",
+  "keywords": [
+    "validate",
+    "normalize",
+    "structure",
+    "norma"
+  ],
+  "author": "Richard Rodger - richardrodger.com",
   "repository": {
     "type": "git",
     "url": "git://github.com/rjrodger/norma.git"
   },
-  "keywords": [
-    "norma",
-    "function",
-    "method",
-    "parameter",
-    "argument",
-    "parameters",
-    "arguments",
-    "type",
-    "signature"
-  ],
-  "author": "Richard Rodger (http://richardrodger.com)",
+  "scripts": {
+    "test": "jest --coverage",
+    "test-some": "jest -t",
+    "test-watch": "jest --coverage --watchAll",
+    "watch": "tsc -w -d",
+    "build": "tsc -d",
+    "clean": "rm -rf node_modules yarn.lock package-lock.json",
+    "reset": "npm run clean && npm i && npm run build && npm test",
+    "repo-tag": "REPO_VERSION=`node -e \"console.log(require('./package').version)\"` && echo TAG: v$REPO_VERSION && git commit -a -m v$REPO_VERSION && git push && git tag v$REPO_VERSION && git push --tags;",
+    "repo-publish": "npm run clean && npm i && npm run repo-publish-quick",
+    "repo-publish-quick": "npm run build && npm run test && npm run repo-tag && npm publish --access public --registry http://registry.npmjs.org "
+  },
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/rjrodger/norma/issues"
-  },
-  "homepage": "https://github.com/rjrodger/norma",
-  "devDependencies": {
-    "docco": "^0.8.0",
-    "jshint": "^2.10.3",
-    "mocha": "^6.2.2",
-    "pegjs": "^0.10.0",
-    "uglify-js": "^3.7.1"
-  },
-  "dependencies": {
-    "eraro": "^2.0.0",
-    "lodash.isarguments": "^3.1.0",
-    "lodash.isdate": "^4.0.1",
-    "lodash.isnan": "^3.0.2",
-    "lodash.isregexp": "^4.0.1"
-  },
   "files": [
-    "README.md",
-    "LICENSE.txt",
-    "norma.js",
-    "norma-parser.js",
-    "norma-min.js",
-    "norma-min.js.map"
-  ]
+    "dist",
+    "src/**/*.ts",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "@types/jest": "^27.0.1",
+    "esbuild": "^0.12.25",
+    "esbuild-jest": "^0.5.0",
+    "jest": "^27.1.0",
+    "typescript": "^4.4.2"
+  }
 }

@@ -1,16 +1,16 @@
 {
   "name": "norma",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "description": "A function argument organizer",
   "main": "norma.js",
   "scripts": {
     "test": "./test.sh",
     "build": "./build.sh",
     "clean": "rm -rf node_modules yarn.lock package-lock.json",
-    "prettier": "prettier --write --no-semi --single-quote norma.js lib/*.js test/*.js",
+    "prettier": "prettier --write --no-semi --single-quote norma.js norma.js test/*.js",
     "reset": "npm run clean && npm i && npm test",
     "repo-tag": "REPO_VERSION=`node -e \"console.log(require('./package').version)\"` && echo TAG: v$REPO_VERSION && git commit -a -m v$REPO_VERSION && git push && git tag v$REPO_VERSION && git push --tags;",
-    "repo-publish": "npm run prettier && npm test && npm run repo-tag && npm publish --registry http://registry.npmjs.org "
+    "repo-publish": "npm run prettier && npm test && npm run repo-tag && npm publish --registry https://registry.npmjs.org "
   },
   "repository": {
     "type": "git",
@@ -34,14 +34,15 @@
   },
   "homepage": "https://github.com/rjrodger/norma",
   "devDependencies": {
-    "docco": "^0.8.0",
-    "jshint": "^2.10.3",
-    "mocha": "^6.2.2",
+    "docco": "^0.9.1",
+    "jshint": "^2.13.6",
+    "mocha": "^10.2.0",
     "pegjs": "^0.10.0",
-    "uglify-js": "^3.7.1"
+    "prettier": "^2.8.8",
+    "uglify-js": "^3.17.4"
   },
   "dependencies": {
-    "eraro": "^2.0.0",
+    "eraro": "^2.1.0",
     "lodash.isarguments": "^3.1.0",
     "lodash.isdate": "^4.0.1",
     "lodash.isnan": "^3.0.2",

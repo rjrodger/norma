@@ -9,8 +9,8 @@ var assert = require('assert')
 var _ = require('lodash')
 var norma = require('..')
 
-describe('norma', function() {
-  it('happy', function() {
+describe('norma', function () {
+  it('happy', function () {
     assert.equal("[ 'a', 1 ]", util.inspect(norma('si', ['a', 1])))
     assert.equal("[ 'a', undefined ]", util.inspect(norma('si?', ['a'])))
     assert.equal('[ undefined, 1 ]', util.inspect(norma('s?i', [1])))
@@ -28,7 +28,16 @@ describe('norma', function() {
     )
   })
 
-  it('no-match', function() {
+  it('integer', function () {
+    assert.equal('[ 1 ]', util.inspect(norma('i', [1])))
+    assert.equal('[ {} ]', util.inspect(norma('o', [{}])))
+    assert.equal(
+      '[ [Object: null prototype] {} ]',
+      util.inspect(norma('o', [Object.create(null)]))
+    )
+  })
+
+  it('no-match', function () {
     try {
       util.inspect(norma('i', [1.1]))
       assert.fail()
@@ -40,7 +49,7 @@ describe('norma', function() {
     assert.equal('null', util.inspect(norma('i', { onfail: 'null' }, [1.1])))
   })
 
-  it('bad-parse', function() {
+  it('bad-parse', function () {
     try {
       norma.compile('q')
     } catch (e) {
@@ -52,7 +61,7 @@ describe('norma', function() {
     }
   })
 
-  it('alternates', function() {
+  it('alternates', function () {
     assert.equal("[ 'c', true ]", util.inspect(norma('s|i b', ['c', true])))
     assert.equal('[ 3, false ]', util.inspect(norma('s|i b', [3, false])))
     assert.equal("[ 'd' ]", util.inspect(norma('s|i|b', ['d'])))
@@ -60,7 +69,7 @@ describe('norma', function() {
     assert.equal('[ true ]', util.inspect(norma('s|i|b', [true])))
   })
 
-  it('commas', function() {
+  it('commas', function () {
     assert.equal("[ 'a', 1 ]", util.inspect(norma('s,i', ['a', 1])))
     assert.equal("[ 'a', 1 ]", util.inspect(norma('s, i', ['a', 1])))
     assert.equal("[ 'a', 1 ]", util.inspect(norma('s ,i', ['a', 1])))
@@ -69,7 +78,7 @@ describe('norma', function() {
     assert.equal("[ 'a', 1 ]", util.inspect(norma(' s , i ', ['a', 1])))
   })
 
-  it('misc-objects', function() {
+  it('misc-objects', function () {
     assert.equal('[ /a/ ]', util.inspect(norma('r', [/a/])))
     assert.equal('[ 1, /a/ ]', util.inspect(norma('ir', [1, /a/])))
 
@@ -88,7 +97,7 @@ describe('norma', function() {
     assert.equal('[ Infinity ]', util.inspect(norma('Y', [Infinity])))
   })
 
-  it('compile', function() {
+  it('compile', function () {
     var n1 = norma.compile('s')
     assert.equal("[ 'foo' ]", util.inspect(n1(['foo'])))
     assert.equal("[ 'bar' ]", util.inspect(n1(['bar'])))
@@ -96,13 +105,13 @@ describe('norma', function() {
     assert.equal("{ spec: 's', re: '/^(s)$/' }", '' + n1)
   })
 
-  it('dot', function() {
+  it('dot', function () {
     assert.equal("[ 'foo' ]", util.inspect(norma('.', ['foo'])))
     assert.equal('[ 1 ]', util.inspect(norma('.', [1])))
     assert.equal("[ true, 1, 'a' ]", util.inspect(norma('b.s', [true, 1, 'a'])))
   })
 
-  it('star', function() {
+  it('star', function () {
     assert.equal('[ undefined ]', util.inspect(norma('s*', [])))
     assert.equal("[ 'a' ]", util.inspect(norma('s*', ['a'])))
     assert.equal("[ 'a', 'a' ]", util.inspect(norma('s*', ['a', 'a'])))
@@ -127,7 +136,7 @@ describe('norma', function() {
     )
   })
 
-  it('plus', function() {
+  it('plus', function () {
     try {
       norma('s+', [])
       assert.fail()
@@ -164,7 +173,7 @@ describe('norma', function() {
     )
   })
 
-  it('no-args', function() {
+  it('no-args', function () {
     try {
       norma('s')
       assert.fail()
@@ -183,7 +192,7 @@ describe('norma', function() {
     }
   })
 
-  it('error-msg', function() {
+  it('error-msg', function () {
     try {
       norma('s', [1, { a: 1 }, [10, 20]])
       assert.fail()
@@ -196,13 +205,13 @@ describe('norma', function() {
     }
   })
 
-  it('optional', function() {
+  it('optional', function () {
     assert.equal('[ 1, null ]', util.inspect(norma('is?', [1, null])))
     assert.equal('[ undefined, 1 ]', util.inspect(norma('s?i', [undefined, 1])))
     assert.equal('[ NaN, 1 ]', util.inspect(norma('s?i', [NaN, 1])))
   })
 
-  it('alt-opt', function() {
+  it('alt-opt', function () {
     assert.equal("[ true, 'c' ]", util.inspect(norma('bs|i?', [true, 'c'])))
     assert.equal('[ true, 1 ]', util.inspect(norma('bs|i?', [true, 1])))
     assert.equal('[ true, undefined ]', util.inspect(norma('bs|i?', [true])))

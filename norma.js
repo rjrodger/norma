@@ -109,7 +109,7 @@ function parse_spec(spec) {
         '", col:' +
         e.location.start.column +
         ', line:' +
-        e.location.start.line
+        e.location.start.line,
     )
   }
 }
@@ -131,7 +131,7 @@ function processargs(specdef, options, rawargs) {
           argdesc +
           ']; values: ' +
           descargs(args, options),
-        { args: args, specdef: specdef, options: options }
+        { args: args, specdef: specdef, options: options },
       )
     } else return null
   }
@@ -164,7 +164,7 @@ function processargs(specdef, options, rawargs) {
               argdesc +
               ']; values: ' +
               descargs(args, options),
-            { args: args, specdef: specdef, options: options }
+            { args: args, specdef: specdef, options: options },
           )
         }
         if (1 == m.length) {
@@ -296,7 +296,7 @@ function handle(specdef, options, rawargs) {
       'init',
       'no arguments variable; expected norma( "...", arguments ), ' +
         'or <compiled>( arguments )',
-      { arguments: arguments }
+      { arguments: arguments },
     )
   } else return processargs(specdef, options, rawargs)
 }

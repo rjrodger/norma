@@ -1,6 +1,6 @@
 {
   "name": "norma",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "A function argument organizer",
   "main": "norma.js",
   "scripts": {
@@ -38,11 +38,11 @@
     "jshint": "^2.13.6",
     "mocha": "^10.2.0",
     "pegjs": "^0.10.0",
-    "prettier": "^2.8.8",
+    "prettier": "^3.1.0",
     "uglify-js": "^3.17.4"
   },
   "dependencies": {
-    "eraro": "^2.1.0",
+    "eraro": "^3.0.1",
     "lodash.isarguments": "^3.1.0",
     "lodash.isdate": "^4.0.1",
     "lodash.isnan": "^3.0.2",

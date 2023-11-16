@@ -20,11 +20,11 @@ describe('norma', function () {
     assert.equal('[ 1.1 ]', util.inspect(norma('n', [1.1])))
     assert.equal(
       "[ 'b', 2, foo: 'b', bar: 2 ]",
-      util.inspect(norma('foo:s bar:i', ['b', 2]))
+      util.inspect(norma('foo:s bar:i', ['b', 2])),
     )
     assert.equal(
       "{ foo: 'b', bar: 2 }",
-      util.inspect(norma('{foo:s bar:i}', ['b', 2]))
+      util.inspect(norma('{foo:s bar:i}', ['b', 2])),
     )
   })
 
@@ -33,7 +33,7 @@ describe('norma', function () {
     assert.equal('[ {} ]', util.inspect(norma('o', [{}])))
     assert.equal(
       '[ [Object: null prototype] {} ]',
-      util.inspect(norma('o', [Object.create(null)]))
+      util.inspect(norma('o', [Object.create(null)])),
     )
   })
 
@@ -56,7 +56,7 @@ describe('norma', function () {
       assert.equal('parse', e.code)
       assert.equal(
         'norma: not a type character: "q"; spec:"q", col:1, line:1',
-        e.message
+        e.message,
       )
     }
   })
@@ -85,7 +85,7 @@ describe('norma', function () {
     function test_args() {
       assert.equal(
         "[ [Arguments] { '0': 999 } ]",
-        util.inspect(norma('g', [arguments]))
+        util.inspect(norma('g', [arguments])),
       )
     }
     test_args(999)
@@ -119,20 +119,20 @@ describe('norma', function () {
     assert.equal("[ 'a', undefined ]", util.inspect(norma('si*', ['a'])))
     assert.equal(
       "[ 'a', 1, 2, 3, true ]",
-      util.inspect(norma('s.*b', ['a', 1, 2, 3, true]))
+      util.inspect(norma('s.*b', ['a', 1, 2, 3, true])),
     )
     assert.equal(
       "[ 'a', undefined, true ]",
-      util.inspect(norma('s.*b', ['a', true]))
+      util.inspect(norma('s.*b', ['a', true])),
     )
 
     assert.equal(
       "[ 'a', 1, 2, 3, foo: [ 1, 2, 3 ] ]",
-      util.inspect(norma('s foo:i*', ['a', 1, 2, 3]))
+      util.inspect(norma('s foo:i*', ['a', 1, 2, 3])),
     )
     assert.equal(
       "{ bar: 'a', foo: [ 1, 2, 3 ] }",
-      util.inspect(norma('{bar:s foo:i*}', ['a', 1, 2, 3]))
+      util.inspect(norma('{bar:s foo:i*}', ['a', 1, 2, 3])),
     )
   })
 
@@ -144,7 +144,7 @@ describe('norma', function () {
       assert.equal('invalid_arguments', e.code)
       assert.equal(
         'norma: invalid arguments; expected: "s+", was: []; values: ',
-        e.message
+        e.message,
       )
     }
 
@@ -153,7 +153,7 @@ describe('norma', function () {
     assert.equal("[ 'a', 1, 2, 3 ]", util.inspect(norma('si+', ['a', 1, 2, 3])))
     assert.equal(
       "[ 'a', 1, 2, 3, true ]",
-      util.inspect(norma('s.+b', ['a', 1, 2, 3, true]))
+      util.inspect(norma('s.+b', ['a', 1, 2, 3, true])),
     )
 
     try {
@@ -165,11 +165,11 @@ describe('norma', function () {
 
     assert.equal(
       "[ 'a', 1, 2, 3, foo: [ 1, 2, 3 ] ]",
-      util.inspect(norma('s foo:i+', ['a', 1, 2, 3]))
+      util.inspect(norma('s foo:i+', ['a', 1, 2, 3])),
     )
     assert.equal(
       "{ bar: 'a', foo: [ 1, 2, 3 ] }",
-      util.inspect(norma('{bar:s foo:i+}', ['a', 1, 2, 3]))
+      util.inspect(norma('{bar:s foo:i+}', ['a', 1, 2, 3])),
     )
   })
 
@@ -200,7 +200,7 @@ describe('norma', function () {
       assert.equal('invalid_arguments', e.code)
       assert.equal(
         e.message,
-        'norma: invalid arguments; expected: "s", was: [ioa]; values: 1,{ a: 1 },[ 10, 20 ]'
+        'norma: invalid arguments; expected: "s", was: [ioa]; values: 1,{ a: 1 },[ 10, 20 ]',
       )
     }
   })
@@ -218,15 +218,15 @@ describe('norma', function () {
 
     assert.equal(
       "[ true, 'c', false ]",
-      util.inspect(norma('bs|i?b', [true, 'c', false]))
+      util.inspect(norma('bs|i?b', [true, 'c', false])),
     )
     assert.equal(
       '[ true, 1, false ]',
-      util.inspect(norma('bs|i?b', [true, 1, false]))
+      util.inspect(norma('bs|i?b', [true, 1, false])),
     )
     assert.equal(
       '[ true, undefined, false ]',
-      util.inspect(norma('bs|i?b', [true, false]))
+      util.inspect(norma('bs|i?b', [true, false])),
     )
   })
 })

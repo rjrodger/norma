@@ -46,7 +46,6 @@
     "eraro": "^3.0.1",
     "lodash.isarguments": "^3.1.0",
     "lodash.isdate": "^4.0.1",
-    "lodash.isnan": "^3.0.2",
     "lodash.isregexp": "^4.0.1"
   },
   "files": [

@@ -11,7 +11,6 @@ var util = require('util')
 
 // #### External modules
 var _ = {}
-_.isNaN = require('lodash.isnan')
 _.isRegExp = require('lodash.isregexp')
 _.isDate = require('lodash.isdate')
 _.isArguments = require('lodash.isarguments')
@@ -229,7 +228,7 @@ function describe(args) {
       (arg | 0) === parseFloat(arg)
     ) {
       desc.push('i')
-    } else if (_.isNaN(arg)) {
+    } else if (Number.isNaN(arg)) {
       desc.push('A')
     } else if (Infinity === arg) {
       desc.push('Y')
